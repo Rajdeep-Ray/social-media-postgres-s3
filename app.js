@@ -10,11 +10,7 @@ const authRouter = require('./routes/auth');
 
 var app = express();
 
-const db = require('./DB/config');
-
-db.authenticate()
-  .then(() => console.log("DB Connected"))
-  .catch((err) => console.log("ERROR : " + err))
+const db = require('./db/db');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
