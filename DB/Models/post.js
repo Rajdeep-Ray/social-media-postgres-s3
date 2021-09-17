@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         },
-        user_id: {
+        userId: {
             type: DataTypes.UUID,
             allowNull: false
         },
@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         }
-    
-    })
-    
-    Posts.sync().then(() => console.log("`posts` table created"))
 
-    return Posts;
+    })
+
+    Posts.sync({ force: false }).then(() => console.log("`posts` table created"))
+
+return Posts;
 }
 
