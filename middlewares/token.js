@@ -13,7 +13,7 @@ exports.verify = (req, res, next) => {
         req.token = jwt.verify(bearerToken, 'HelloWorld');
         next();
     } else {
-        res.sendStatus(403);
+        res.sendStatus(403).send("You are not authorized");
     }
 
 }
