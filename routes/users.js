@@ -1,9 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const userRouter = require('express').Router();
+const db = require('../db/db');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+userRouter.get('/:id', function (req, res, next) {
+	db.Users.findOne({
+		where: {
+			id: req.params.id,
+		},
+		include: {
+			model: db.Posts
+		}
+	})
+		.then((user) => {
+			res.json(user);
+		})
+		.catch((err) => {
+			console.log(err.message);
+			res.status(500).send(err.message)
+		})
 });
 
-module.exports = router;
+module.exports = userRouter;
