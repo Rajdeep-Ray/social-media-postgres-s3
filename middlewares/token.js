@@ -17,3 +17,16 @@ exports.verify = (req, res, next) => {
     }
 
 }
+
+exports.verifyWithAnonymous = (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = jwt.verify(bearerToken, 'HelloWorld');
+        next();
+    } else {
+        req.token = { role: ['anonymous'] };
+        next();
+    }
+}
