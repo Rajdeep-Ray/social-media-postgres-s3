@@ -21,7 +21,6 @@ authRouter.post('/signup', (req, res, next) => {
                             email: req.body.email,
                             password: hash,
                             phone: req.body.phone,
-                            profile_pic: req.body.profile_pic,
                             bio: req.body.bio
                         })
                             .then((user) => {
