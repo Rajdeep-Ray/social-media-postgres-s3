@@ -25,7 +25,7 @@ authRouter.post('/signup', (req, res, next) => {
                         })
                             .then((user) => {
                                 res.json({
-                                    token: jwt.token({ id: user.id })
+                                    token: jwt.token({ id: user.id, role: user.role })
                                 });
                             })
                             .catch((err) => {
@@ -69,7 +69,7 @@ authRouter.post('/signin', (req, res, next) => {
                         console.log(user.role);
                         if (result) {
                             res.json({
-                                token: jwt.token({ id: user.id })
+                                token: jwt.token({ id: user.id, role: user.role })
                             });
                         } else {
                             res.send("Incorrect passwprd")
