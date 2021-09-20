@@ -25,23 +25,26 @@ userRouter.post('/makeAdmin/:id', (req, res, next) => {
 			if (user.role.includes('super_admin')) {
 				res.send("Already ADMIN");
 			}
-			var _roles = user.role;
-			_roles.push('super_admin')
+			else {
+				var _roles = user.role;
+				_roles.push('super_admin')
 
-			db.Users.update({
-				role: _roles
-			}, {
-				where: {
-					id: req.params.id
-				}
-			})
-				.then(() => {
-					res.send("USER ROLE Updated!")
+				db.Users.update({
+					role: _roles
+				}, {
+					where: {
+						id: req.params.id
+					}
 				})
-				.catch((err) => {
-					console.log(err.message);
-					res.status(500).send(err.message)
-				})
+					.then(() => {
+						res.send("USER ROLE Updated!")
+					})
+					.catch((err) => {
+						console.log(err.message);
+						res.status(500).send(err.message)
+					})
+			}
+
 		})
 		.catch((err) => {
 			console.log(err.message);
@@ -50,5 +53,45 @@ userRouter.post('/makeAdmin/:id', (req, res, next) => {
 
 })
 
+userRouter.post('/revokeAdmin/:id', (req, res, next) => {
+	db.Users.findByPk(req.params.id)
+		.then((user) => {
+			//TODO : Revoke admin access
+			if (user.role.includes('super_admin')) {
+				const _roles = user.role;
+
+				const i = _roles.indexOf("super_admin");
+				if (i > -1) {
+					_roles.splice(i, 1);
+				}
+
+				console.log(_roles);
+
+				db.Users.update({
+					role: _roles
+				}, {
+					where: {
+						id: req.params.id
+					}
+				})
+					.then(() => {
+						res.send("USER ROLE Updated!")
+					})
+					.catch((err) => {
+						console.log(err.message);
+						res.status(500).send(err.message)
+					})
+			}
+			else {
+				res.send("Not ADMIN")
+			}
+
+		})
+		.catch((err) => {
+			console.log(err.message);
+			res.send("USER not found!")
+		})
+
+})
 
 module.exports = userRouter;

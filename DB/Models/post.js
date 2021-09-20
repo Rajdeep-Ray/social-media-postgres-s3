@@ -24,12 +24,20 @@ module.exports = (sequelize, DataTypes) => {
         isPrivate: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        likes: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        likedBy: {
+            type: DataTypes.ARRAY(DataTypes.UUID),
+            defaultValue: []
         }
 
     })
 
     Posts.sync({ force: false }).then(() => console.log("`posts` table created"))
 
-return Posts;
+    return Posts;
 }
 

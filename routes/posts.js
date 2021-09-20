@@ -244,5 +244,81 @@ postRouter.get('/user/:id', (req, res, next) => {
         })
 })
 
+postRouter.post('/like/:id', verifyToken, (req, res, next) => {
+    db.Posts.findByPk(req.params.id)
+        .then((post) => {
+            if (post.likedBy.includes(req.token.id)) {
+                db.Posts.decrement('likes', {
+                    where: {
+                        id: req.params.id
+                    }
+                })
+                    .then(() => {
+                        // TODO : Pop element from array
+                        const _likedBy = post.likedBy;
+
+                        const i = _likedBy.indexOf(req.token.id);
+                        if (i > -1) {
+                            _likedBy.splice(i, 1);
+                        }
+
+                        console.log(_likedBy);
+
+                        db.Posts.update({
+                            likedBy: _likedBy
+                        }, {
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                            .then(() => {
+                                res.send('Video UN-LIKED')
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                                res.status(500).send(err.message)
+                            })
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                        res.status(500).send(err.message)
+                    })
+            } else {
+                db.Posts.increment('likes', {
+                    where: {
+                        id: req.params.id
+                    }
+                })
+                    .then(() => {
+                        // TODO : Push element to array
+                        var _likedBy = post.likedBy;
+                        _likedBy.push(req.token.id)
+                        db.Posts.update({
+                            likedBy: _likedBy
+                        }, {
+                            where: {
+                                id: req.params.id
+                            }
+                        })
+                            .then(() => {
+                                res.send('Video LIKED')
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                                res.status(500).send(err.message)
+                            })
+                    })
+                    .catch((err) => {
+                        console.log(err.message, "Here");
+                        res.status(500).send(err.message)
+                    })
+            }
+        })
+        .catch((err) => {
+            console.log(err.message);
+            res.status(500).send(err.message)
+        })
+})
+
 module.exports = postRouter;
 
